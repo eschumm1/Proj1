@@ -349,19 +349,27 @@ void PosInt::mulArray(int* dest, const int* x, int xlen, const int* y, int ylen)
 // Computes dest = x * y, digit-wise, using Karatsuba's method.
 // x and y have the same length (len)
 // dest must have size (2*len) to store the result.
-static void fastMulArray (int* dest, const int* x, const int* y, int len) {
+static void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len) {
 	int newLen = len / 2;
+	int* z0, z1, z2;
 	
-	if(newLen != 1){
-		xHigh = x[0:newLen];
-		xLow = x[newLen + 1:len];
-		yHigh = y[0:newLen];
-		yLow = y[newLen + 1:len];
-	
-		fastMulArray(&dest, xLow, yLow, newLen);
-		fastMulArray(&dest, add(xLow, xHigh), add(yLow, yHigh), newLen);
-		fastMulArray(&dest, xHigh, yHigh, newLen);
+	if(newLen == 1){
+		dest = x * y;
+		return;
 	}
+	
+	for(int i = 0; i < newLen; i++){
+		int* xHigh[i] = x[i];
+		int* xLow[i] = x[i + newLen];
+		int* yHigh[i] = y[i];
+		int* yLow[i] = y[i + newLen];
+	}
+
+	fastMulArray(&z0, xLow, yLow, newLen);
+	fastMulArray(&z1, addArray(xLow, xHigh, newLen), addArray(yLow, yHigh, newLen), newLen);
+	fastMulArray(&z2, xHigh, yHigh, newLen);
+	
+	dest = (z2 * pow(2 * newLen)) + ((subArray(z1, subArray(z2, z0, len), len)) * pow(newLen)) + z0;
 }
 
 // this = this * x
