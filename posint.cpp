@@ -372,7 +372,11 @@ static void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len
 	
 	subArray(z2, z0, len);
 	
-	dest = (z2 * pow(2 * newLen)) + (subArray(z1, z2, len) * pow(newLen)) + z0;
+	//dest = (z2 * pow(2 * newLen)) + (subArray(z1, z2, len) * pow(newLen)) + z0;
+	
+	dest[0] = z2;
+	dest[newLen] = subArray(z1, z2, len);
+	dest[2 * newLen] = z0;
 }
 
 // this = this * x
