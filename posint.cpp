@@ -354,7 +354,8 @@ static void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len
 	int* z0, z1, z2;
 	
 	if(newLen == 1){
-		dest = x * y;
+		mulDigit(x, y, len);
+		dest = x;
 		return;
 	}
 	
@@ -365,11 +366,13 @@ static void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len
 		int* yLow[i] = y[i + newLen];
 	}
 
-	fastMulArray(&z0, xLow, yLow, newLen);
-	fastMulArray(&z1, addArray(xLow, xHigh, newLen), addArray(yLow, yHigh, newLen), newLen);
-	fastMulArray(&z2, xHigh, yHigh, newLen);
+	fastMulArray(z0, xLow, yLow, newLen);
+	fastMulArray(z1, addArray(xLow, xHigh, newLen), addArray(yLow, yHigh, newLen), newLen);
+	fastMulArray(z2, xHigh, yHigh, newLen);
 	
-	dest = (z2 * pow(2 * newLen)) + ((subArray(z1, subArray(z2, z0, len), len)) * pow(newLen)) + z0;
+	subArray(z2, z0, len);
+	
+	dest = (z2 * pow(2 * newLen)) + (subArray(z1, z2, len) * pow(newLen)) + z0;
 }
 
 // this = this * x
