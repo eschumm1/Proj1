@@ -333,12 +333,15 @@ void PosInt::sub (const PosInt& x) {
 // x has length xlen and y has length ylen.
 // dest must have size (xlen+ylen) to store the result.
 // Uses standard O(n^2)-time multiplication.
-void PosInt::mulArray(int* dest, const int* x, int xlen, const int* y, int ylen) {
+void PosInt::mulArray(int* dest, const int* x, int xlen, const int* y, int ylen) 
+{
 	for (int i=0; i<xlen+ylen; ++i)
 		dest[i] = 0;
 	
-	for (int i=0; i<xlen; ++i) {
-		for (int j=0; j<ylen; ++j) {
+	for (int i=0; i<xlen; ++i) 
+	{
+		for (int j=0; j<ylen; ++j) 
+		{
 			dest[i+j] += x[i] * y[j];
 			dest[i+j+1] += dest[i+j] / B;
 			dest[i+j] %= B;
@@ -349,21 +352,28 @@ void PosInt::mulArray(int* dest, const int* x, int xlen, const int* y, int ylen)
 // Computes dest = x * y, digit-wise, using Karatsuba's method.
 // x and y have the same length (len)
 // dest must have size (2*len) to store the result.
-static void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len) {
+static void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len)
+{
 	int newLen = len / 2;
 	int* z0, z1, z2;
 	
-	if(newLen == 1){
+	if(newLen == 1)
+	{
 		mulDigit(x, y, len);
 		dest = x;
 		return;
 	}
+	int* xHigh[];
+	int* xLow[];
+	int* yHigh[];
+	int* yLow[];
 	
-	for(int i = 0; i < newLen; i++){
-		int* xHigh[i] = x[i];
-		int* xLow[i] = x[i + newLen];
-		int* yHigh[i] = y[i];
-		int* yLow[i] = y[i + newLen];
+	for(int i = 0; i < newLen; i++)
+	{
+		xHigh[i] = x[i];
+		xLow[i] = x[i + newLen];
+		yHigh[i] = y[i];
+		yLow[i] = y[i + newLen];
 	}
 
 	fastMulArray(z0, xLow, yLow, newLen);
