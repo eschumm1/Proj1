@@ -352,24 +352,26 @@ void PosInt::mulArray(int* dest, const int* x, int xlen, const int* y, int ylen)
 // Computes dest = x * y, digit-wise, using Karatsuba's method.
 // x and y have the same length (len)
 // dest must have size (2*len) to store the result.
-static void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len)
+void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len)
 {
 	int newLen = len / 2;
-	int* z0, z1, z2;
+	int* z0 = new int[newLen];
+	int* z1 = new int[newLen];
+	int* z2 = new int[newLen];
 	
-	if(newLen == 1)
-	{
-		mulDigit(x, y, len);
-		dest = x;
+	if(newLen == 1){
+		int temp = *x;
+		mulDigit(&temp, *y, len);
+		dest = &temp;
 		return;
 	}
-	int* xHigh[];
-	int* xLow[];
-	int* yHigh[];
-	int* yLow[];
 	
-	for(int i = 0; i < newLen; i++)
-	{
+	int* xHigh = new int[newLen];
+	int* xLow = new int[newLen];
+	int* yHigh = new int[newLen];
+	int* yLow = new int[newLen];
+	
+	for(int i = 0; i < newLen; i++){
 		xHigh[i] = x[i];
 		xLow[i] = x[i + newLen];
 		yHigh[i] = y[i];
@@ -377,16 +379,21 @@ static void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len
 	}
 
 	fastMulArray(z0, xLow, yLow, newLen);
-	fastMulArray(z1, addArray(xLow, xHigh, newLen), addArray(yLow, yHigh, newLen), newLen);
+	
+	addArray(xLow, xHigh, newLen);
+	addArray(yLow, yHigh, newLen);
+	fastMulArray(z1, xLow, yLow, newLen);
+	
 	fastMulArray(z2, xHigh, yHigh, newLen);
 	
 	subArray(z2, z0, len);
 	
 	//dest = (z2 * pow(2 * newLen)) + (subArray(z1, z2, len) * pow(newLen)) + z0;
 	
-	dest[0] = z2;
-	dest[newLen] = subArray(z1, z2, len);
-	dest[2 * newLen] = z0;
+	dest[0] = *z2;
+	subArray(z1, z2, len);
+	dest[newLen] = *z1;
+	dest[2 * newLen] = *z0;
 }
 
 // this = this * x
@@ -438,7 +445,7 @@ void PosInt::fastMul(const PosInt& x) {
 	for (int i=0; i<mylen; ++i)
 		mycopy[i] = digits[i];
 	
-	fastMulArray(&digits, mycopy, &x.digits, mylen);
+	fastMulArray(&digits[0], mycopy, &x.digits[0], mylen);
 }
 
 /******************** DIVISION ********************/
@@ -582,26 +589,27 @@ void PosInt::divrem (PosInt& q, PosInt& r, const PosInt& x, const PosInt& y) {
 		if (&x == &q || &x == &r) {
 			xarr = new int[xlen];
       
-		for (int i=0; i<xlen; ++i)
-			xarr[i] = x.digits[i];
-    }
+			for (int i=0; i<xlen; ++i)
+				xarr[i] = x.digits[i];
+    		}
     
-	if (&y == &q || &y == &r) {
-		yarr = new int[ylen];
+		if (&y == &q || &y == &r) {
+			yarr = new int[ylen];
 		
-		for (int i=0; i<ylen; ++i)
-			yarr[i] = y.digits[i];
-    }
+			for (int i=0; i<ylen; ++i)
+				yarr[i] = y.digits[i];
+    		}
     
-	q.digits.resize(xlen - ylen + 1);
-    r.digits.resize(xlen);
-    divremArray (&q.digits[0], &r.digits[0], (xarr == NULL ? (&x.digits[0]) : xarr), xlen, (yarr == NULL ? (&y.digits[0]) : yarr), ylen);
+		q.digits.resize(xlen - ylen + 1);
+    		r.digits.resize(xlen);
+    		divremArray (&q.digits[0], &r.digits[0], (xarr == NULL ? (&x.digits[0]) : xarr), xlen, (yarr == NULL ? (&y.digits[0]) : yarr), ylen);
     
-	if (xarr != NULL)
-		delete [] xarr;
+		if (xarr != NULL)
+			delete [] xarr;
     
-	if (yarr != NULL)
-		delete [] yarr;
+		if (yarr != NULL)
+			delete [] yarr;
+	}
 	
 	q.normalize();
 	r.normalize();
