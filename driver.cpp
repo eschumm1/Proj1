@@ -23,20 +23,28 @@ int main() {
   // z = random number between 0 and 2^128 - 1
   //  srand(0);
   srand(time(NULL));
-  PosInt z;
-  z.rand(x);
+  PosInt z(10);
+  //z.rand(x);
+  PosInt a(z);
 
   cout << "x = 2^128 = " << x << endl;
-  cout << "z = rand(x) = " << z << endl;
+  //cout << "z = rand(x) = " << z << endl;
+  cout << "z  = " << z << endl;
 
   // z = z^2
   z.mul(z);
-
   cout << "z^2 = " << z << endl;
+	
+	//z.set(10000000);
+	cout << "a =  " << a << endl;
+	a.fastMul(a);
+	cout << "Fast mul A^2 = " << a << endl;
 
   // z = z mod x
   z.mod(x);
 
   cout << "z^2 mod x = " << z << endl;
+
+
 }
   
