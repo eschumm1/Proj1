@@ -6,8 +6,7 @@
 #include <exception>
 
 /* This is an exception class for the MP library. */
-class MPError :public virtual std::exception 
-{
+class MPError :public virtual std::exception {
   protected:
     const char* msg;
   public:
@@ -21,8 +20,7 @@ class MPError :public virtual std::exception
  * digits, starting from the least-significant digit, and
  * with each digit between 0 and B-1.
  */
-class PosInt 
-{
+class PosInt {
   private:
     // It must ALWAYS be the case that B = Bbase ^ Bpow.
     // B is really the one to be concerned about for arithmetic; 

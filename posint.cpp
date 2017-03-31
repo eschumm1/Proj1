@@ -353,30 +353,37 @@ void PosInt::mulArray(int* dest, const int* x, int xlen, const int* y, int ylen)
 // x and y have the same length (len)
 // dest must have size (2*len) to store the result.
 void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len)
-{
-	int newLen = len / 2;
-	int* z0 = new int[newLen];
-	int* z1 = new int[newLen];
-	int* z2 = new int[newLen];
-		
-	if(len <= 2){
+{	
+	//cout << len << endl;
+
+	if(len == 1){
 		int temp = *x;
 		mulDigit(&temp, *y, len);
-		dest = &temp;
+		*dest = temp;
 		return;
 	}
-	
+
+	int newLen = len / 2;
+	int* z0 = new int[len];
+	int* z1 = new int[len];
+	int* z2 = new int[len];
 	int* xHigh = new int[newLen];
 	int* xLow = new int[newLen];
 	int* yHigh = new int[newLen];
 	int* yLow = new int[newLen];
 	
+	cout << x[0] << " " << y[0] << endl;
+
 	for(int i = 0; i < newLen; i++){
 		xHigh[i] = x[i];
 		xLow[i] = x[i + newLen];
 		yHigh[i] = y[i];
 		yLow[i] = y[i + newLen];
 	}
+
+	
+
+	//cout << *xLow << " " << *xHigh << " " << *yLow << " " << *yHigh << " " << endl;
 
 	fastMulArray(z0, xLow, yLow, newLen);
 	
@@ -414,10 +421,10 @@ void PosInt::mul(const PosInt& x) {
   
 	for (int i=0; i<mylen; ++i)
 		mycopy[i] = digits[i];
-  
+
 	digits.resize(mylen + xlen);
 	mulArray(&digits[0], mycopy, mylen, &x.digits[0], xlen);
-
+	
 	normalize();
 	delete [] mycopy;
 }
@@ -445,8 +452,8 @@ void PosInt::fastMul(const PosInt& x) {
 
 	digits.resize(mylen + xlen);
 
-	fastMulArray(&digits[0], mycopy, &x.digits[0], xlen);
-	
+	fastMulArray(&digits[0], mycopy, &x.digits[0], digits.size());
+
 	normalize();
 	delete [] mycopy;
 }

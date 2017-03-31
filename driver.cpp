@@ -23,7 +23,7 @@ int main() {
   // z = random number between 0 and 2^128 - 1
   //  srand(0);
   srand(time(NULL));
-  PosInt z(10);
+  PosInt z(64);
   //z.rand(x);
   PosInt a(z);
 
