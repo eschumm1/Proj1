@@ -354,12 +354,10 @@ void PosInt::mulArray(int* dest, const int* x, int xlen, const int* y, int ylen)
 // dest must have size (2*len) to store the result.
 void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len)
 {	
-	//cout << len << endl;
+	//cout << len << " " << *dest << endl;
 
 	if(len == 1){
-		int temp = *x;
-		mulDigit(&temp, *y, len);
-		*dest = temp;
+		mulArray(dest, x, len, y, len);
 		return;
 	}
 
@@ -372,7 +370,7 @@ void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len)
 	int* yHigh = new int[newLen];
 	int* yLow = new int[newLen];
 	
-	cout << x[0] << " " << y[0] << endl;
+	//cout << x[0] << " " << y[0] << endl;
 
 	for(int i = 0; i < newLen; i++){
 		xHigh[i] = x[i];
@@ -380,8 +378,6 @@ void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len)
 		yHigh[i] = y[i];
 		yLow[i] = y[i + newLen];
 	}
-
-	
 
 	//cout << *xLow << " " << *xHigh << " " << *yLow << " " << *yHigh << " " << endl;
 
@@ -393,12 +389,10 @@ void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len)
 	
 	fastMulArray(z2, xHigh, yHigh, newLen);
 
-	subArray(z2, z0, len);
-		
 	dest[0] = *z2;
+	subArray(z2, z0, len);
 	subArray(z1, z2, len);
-	dest[newLen] = *z1;
-	dest[2 * newLen] = *z0;
+	dest[0] = *dest | (*z1 >> newLen) | (*z0 >> (2 * newLen));
 }
 
 // this = this * x
