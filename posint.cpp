@@ -354,42 +354,9 @@ void PosInt::mulArray(int* dest, const int* x, int xlen, const int* y, int ylen)
 // dest must have size (2*len) to store the result.
 void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len)
 {
-/*	int i;
-	const int *xLow = &x[0];
-	const int *xHigh = &x[len/2];
-	const int *yLow = &y[0];	
-	const int *yHigh = &y[len/2];
-	int *xsum = &dest[len * 5];
-	int *ysum = &dest[len * 5 + len/2];
-	int *z0 = &dest[len * 0];
-	int *z1 = &dest[len * 1];
-	int *z2 = &dest[len * 2];
 
-	if(len <= 4)
-	{
-	//	mulArray();
-		return;
-	} 
-	for(i = 0; i < len/2; i++)
-	{
-		xsum[i] = xHigh[i] + xLow[i];
-		ysum[i] = yHigh[i] + yLow[i];
-	}
-	
-	fastMulArray(z0, xLow, yLow, len/2);
-	fastMulArray(z1, xHigh, yHigh, len/2);
-	fastMulArray(z2, xsum, ysum, len/2);
-
-	for(i = 0; i < len; i++)
-	{
-		z2[i] = z2[i] - z0[i] - z1[i];
-	}
-	for(i = 0; i < len; i++)
-	{
-		dest[i + len/2] += z2[i];
-	}
-*/
-	int newLen = len / 2;
+	// To maintain even case and handle odd case, max length divided by two and rounded up
+	int newLen = (len / 2) + (len % 2);
 	int* z0 = new int[newLen*2];
 	int* z1 = new int[newLen*2];
 	int* z2 = new int[newLen*2];	
