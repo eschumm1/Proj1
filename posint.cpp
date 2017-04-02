@@ -399,28 +399,25 @@ void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len)
 	int* yHigh = new int[newLen];
 	int* yLow = new int[newLen];
 
-	if(len <= 4)
+	if(len == 1)
 	{
 		mulArray(dest, x, len, y, len);		
 		return;
 	}
-
-	cout << x[0] << " " << y[0] << endl;
-	
+//	cout << x[0] << " " << y[0] << endl;
 	for(int i = 0; i < newLen; i++){
 		xHigh[i] = x[i];
-		xLow[i] = x[i + newLen];
+		xLow[i] = x[i + newLen+1];
 		yHigh[i] = y[i];
-		yLow[i] = y[i + newLen];
+		yLow[i] = y[i + newLen+1];
 	}
 
 	fastMulArray(z0, xLow, yLow, newLen);
-
 	addArray(xLow, xHigh, newLen+1);
 	addArray(yLow, yHigh, newLen+1);
-	fastMulArray(z1, xLow, yLow, newLen);
+	fastMulArray(z1, xHigh, yHigh, newLen);
 
-	fastMulArray(z2, xHigh, yHigh, newLen);
+	//fastMulArray(z2, xHigh, yHigh, newLen);
 
 	dest[0] = *z2;
 
@@ -429,14 +426,15 @@ void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len)
 	
   // >> shifting to the right, only change values of two elements
   // don't shift all of z1 and z0
-	dest[2] = *dest | (*z1 >> newLen) | (*z0 >> (2 * len+1));
+	dest[2] = *dest | (*z1 >> newLen) | (*z0 >> (2 * len));
 	
-	cout << "*****************" << endl;
-	cout << "z0 " << *z0 << endl;
-	cout << "z1 " << *z1 << endl;
-	cout << "z2 " << *z2 << endl;
+/*	cout << "*****************" << endl;
+	cout << "z0 " << *z0 << " " << &z0 << endl;
+	cout << "z1 " << *z1 << " " << &z1 << endl;
+	cout << "z2 " << *z2 << " " <<  &z2 << endl;
 	cout << "dest " << *dest << endl;
-	cout << "*****************" << endl;
+	cout << "dest " << &dest << endl;
+	cout << "*****************" << endl;*/
 }
 
 // this = this * x
