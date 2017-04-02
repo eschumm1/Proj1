@@ -14,7 +14,7 @@ int main()
   // digits (or 12 bits) per 32-bit int.  It is more
   // space-efficient to use the default, but then the
   // numbers will print in binary.
-  	PosInt::setBase(16, 3);
+  	PosInt::setBase(10, 4);
 	
   // x = 2^128
   	PosInt x(2);
@@ -24,7 +24,7 @@ int main()
   // z = random number between 0 and 2^128 - 1
   	//  srand(0);
   	srand(time(NULL));
-  	PosInt z(10);
+  	PosInt z(936900000);
   	//z.rand(x);
   	PosInt a(z);
 
@@ -44,21 +44,21 @@ int main()
   	cout << "z^2 = " << z << endl;
 	double diff;
 	diff = difftime(end, begin);
-	double elapsed_sec = (1000 * double(end - begin) / CLOCKS_PER_SEC);
+	double elapsed_sec = (1000000*double(end - begin) / CLOCKS_PER_SEC);
 	cout << "Time elapsed: " << elapsed_sec << endl;	
-	cout << "Execution time: " << diff << endl;
+	cout << "Execution time: " << diff << " seconds" << endl;
 	
   // z.set(10000000);
   	cout << "a =  " << a << endl;
-
+	cout << endl;
 	clock_t kbegin = clock();
 
   	a.fastMul(a);
 
 	clock_t kend = clock();
-	double kelapsed_sec = (1000 * double(kend - kbegin) / CLOCKS_PER_SEC);
-	cout << "Time elapsed: " << kelapsed_sec << endl;
 	
+	cout << "Time elapsed: " <<  (1000000 * double(kend - kbegin) / CLOCKS_PER_SEC) << endl;
+	cout << endl;
   	cout << "Fast mul a^2 = " << a << endl;
 	
   // z = z mod x
