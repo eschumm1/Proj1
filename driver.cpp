@@ -16,16 +16,18 @@ int main()
   // numbers will print in binary.
   	PosInt::setBase(16, 3);
 	
-  // x = 2^128
+  	// x = 2^128
   	PosInt x(2);
  	PosInt y(128);
   	x.pow(y);
+	clock_t begin, end;
 
-  // z = random number between 0 and 2^128 - 1
-   srand(0);
+  	// z = random number between 0 and 2^128 - 1
+  	 srand(0);
   	srand(time(NULL));
   	PosInt z;
-  	z.rand(x);
+  	z.set(10000000);
+  	//z.rand(x);
   	PosInt a(z);
 
 	cout << "****************************************************" << endl;
@@ -33,33 +35,26 @@ int main()
   	cout << "z = rand(x) = " << z << endl;
 	cout << "****************************************************" << endl;
 
-  	//cout << "z  = " << z << endl;
-
-	time_t begin;
-  // z = z^2
-	cout << "Multiplication " << endl;
-	time(&begin);
+  	// z = z^2
+	begin = clock();
   	z.mul(z);
-	time_t end;
-	time(&end);
+	end = clock() - begin;
   	cout << "z^2 = " << z << endl;
-	//double diff;
-	//diff = difftime(end, begin);
-	double elapsed_sec = (1000000*double(end - begin) / CLOCKS_PER_SEC);
-	cout << "Time elapsed: " << elapsed_sec << endl;	
-	//cout << "Execution time: " << diff << " seconds" << endl;
+	cout << "Mul runtime: " <<  end / CLOCKS_PER_SEC << endl;
 	
-  // z.set(10000000);
 	cout << "****************************************************" << endl;
   	//cout << "a =  " << a << endl;
-	cout << "Fast Multiplication " << endl;
-	clock_t kbegin = clock();
+	begin = clock();
   	a.fastMul(a);
-	clock_t kend = clock();
-  	cout << "Fast mul z^2 = " << z << endl;
-	cout << "Time elapsed: " <<  (1000000 * double(kend - kbegin) / CLOCKS_PER_SEC) << endl;
+	end = clock() - begin;
+  	cout << "Fast mul z^2 = " << a << endl;
+	cout << "FastMul runtime: " << end / CLOCKS_PER_SEC << endl;
+
+	cout << "****************************************************" << endl;	
+	z.sub(a);
+	cout << "Difference: " << z << endl;
 	
-  // z = z mod x
+  	// z = z mod x
   	z.mod(x);
  	cout << "z^2 mod x = " << z << endl;
 
