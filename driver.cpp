@@ -26,7 +26,7 @@ int main()
   	 srand(0);
   	srand(time(NULL));
   	PosInt z;
-  	z.set(10000000);
+  	z.set(4096);
   	//z.rand(x);
   	PosInt a(z);
 

@@ -354,45 +354,44 @@ void PosInt::mulArray(int* dest, const int* x, int xlen, const int* y, int ylen)
 // dest must have size (2*len) to store the result.
 void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len)
 {
-	// To maintain even case and handle odd case, max length divided by two and rounded up
-	int newLen = len / 2;
-	int* z0 = new int[len];
-	int* z1 = new int[len];
-	int* z2 = new int[len];	
-
-	int* xHigh = new int[newLen];
-	int* xLow = new int[newLen];
-	int* yHigh = new int[newLen];
-	int* yLow = new int[newLen];
-
 	if(len == 1)
 	{
 		mulArray(dest, x, len, y, len);		
 		return;
 	}
-//	cout << x[0] << " " << y[0] << endl;
+	
+	// To maintain even case and handle odd case, max length divided by two and rounded up
+	int newLen = len / 2 + len % 2;
+	int* z0 = new int[len]();
+	int* z1 = new int[len]();
+	int* z2 = new int[len]();	
+
+	int* xHigh = new int[newLen]();
+	int* xLow = new int[newLen]();
+	int* yHigh = new int[newLen]();
+	int* yLow = new int[newLen]();
+
+	//cout << x[0] << " " << y[0] << endl;
 	for(int i = 0; i < newLen; i++){
 		xHigh[i] = x[i];
-		xLow[i] = x[i + newLen + 1];
+		xLow[i] = x[i + newLen];
 		yHigh[i] = y[i];
-		yLow[i] = y[i + newLen + 1];
+		yLow[i] = y[i + newLen];
 	}
 
 	fastMulArray(z0, xLow, yLow, newLen);
-	addArray(xLow, xHigh, newLen + 1);
-	addArray(yLow, yHigh, newLen + 1);
-	fastMulArray(z1, xHigh, yHigh, newLen);
+	addArray(xLow, xHigh, newLen);
+	addArray(yLow, yHigh, newLen);
+	fastMulArray(z1, xLow, yLow, newLen);
 
 	fastMulArray(z2, xHigh, yHigh, newLen);
 
-	dest[0] = *z2;
-
 	subArray(z1, z2, len);
 	subArray(z1, z0, len);
-
-  // >> shifting to the right, only change values of two elements
-  // don't shift all of z1 and z0
-	dest[2] = *dest | (*z1 >> newLen) | (*z0 >> (2 * len));
+	
+	dest[0] = *z2;
+	addArray(&dest[len - newLen], z1, len);
+	addArray(&dest[len], z0, len);
 
 /*	cout << "*****************" << endl;
 	cout << "z0 " << *z0 << " " << &z0 << endl;
