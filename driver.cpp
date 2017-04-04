@@ -23,10 +23,10 @@ int main()
 	clock_t begin, end;
 
   	// z = random number between 0 and 2^128 - 1
-  	 srand(0);
+  	srand(0);
   	srand(time(NULL));
   	PosInt z;
-  	z.set(4096);
+  	z.set(999487);
   	//z.rand(x);
   	PosInt a(z);
 
@@ -53,7 +53,6 @@ int main()
 	cout << "****************************************************" << endl;	
 	z.sub(a);
 	cout << "Difference: " << z << endl;
-	
   	// z = z mod x
   	z.mod(x);
  	cout << "z^2 mod x = " << z << endl;

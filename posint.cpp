@@ -354,7 +354,9 @@ void PosInt::mulArray(int* dest, const int* x, int xlen, const int* y, int ylen)
 // dest must have size (2*len) to store the result.
 void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len)
 {
-	if(len == 1)
+	subArray(dest, dest, 2 * len + len % 2);
+
+	if(len <= 1)
 	{
 		mulArray(dest, x, len, y, len);		
 		return;
@@ -380,6 +382,7 @@ void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len)
 	}
 
 	fastMulArray(z0, xLow, yLow, newLen);
+
 	addArray(xLow, xHigh, newLen);
 	addArray(yLow, yHigh, newLen);
 	fastMulArray(z1, xLow, yLow, newLen);
@@ -389,15 +392,15 @@ void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len)
 	subArray(z1, z2, len);
 	subArray(z1, z0, len);
 	
-	dest[0] = *z2;
-	addArray(&dest[len - newLen], z1, len);
+	*dest = *z2;
+	addArray(&dest[newLen], z1, len);
 	addArray(&dest[len], z0, len);
 
-/*	cout << "*****************" << endl;
+	/*cout << "*****************" << endl;
 	cout << "z0 " << *z0 << " " << &z0 << endl;
 	cout << "z1 " << *z1 << " " << &z1 << endl;
 	cout << "z2 " << *z2 << " " <<  &z2 << endl;
-	cout << "dest " << *dest << endl;
+	cout << "dest " << dest << endl;
 	cout << "dest " << &dest << endl;
 	cout << "*****************" << endl;*/
 }
@@ -448,12 +451,12 @@ void PosInt::fastMul(const PosInt& x) {
 
 	int* mycopy = new int[mylen];
   
-	for (int i=0; i<mylen; ++i)
+	for (int i=0; i<mylen; i++)
 		mycopy[i] = digits[i];
 
 	digits.resize(mylen + xlen);
-
-	fastMulArray(&digits[0], mycopy, &x.digits[0], xlen);
+	
+	fastMulArray(&digits[0], mycopy, &x.digits[0], mylen);
 	
 	normalize();
 	delete [] mycopy;
