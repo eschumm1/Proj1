@@ -298,10 +298,20 @@ void PosInt::add (const PosInt& x) {
 
 // Computes dest -= x, digit-wise
 // REQUIREMENT: dest >= x, so the difference is non-negative
-void PosInt::subArray (int* dest, const int* x, int len) {
+void PosInt::subArray (int* dest, const int* y, int len) {
+	int* x = new int[len]();	
 	int i = 0;
+
+	for(;i < len; i++)
+		x[i] = y[i];
+
+	if(compareDigits(dest, len, y, len) < 0){
+		int* temp = x;
+		x = dest;
+		dest = temp;
+	}
 	
-	for ( ; i < len; ++i)
+	for (i = 0 ; i < len; ++i)
 		dest[i] -= x[i];
 
 	for (i=0; i+1 < len; ++i) {
@@ -347,6 +357,12 @@ void PosInt::mulArray(int* dest, const int* x, int xlen, const int* y, int ylen)
 			dest[i+j] %= B;
 		}
 	}
+
+	cout << "Dest: ";
+	for(int i = 0; i < xlen + ylen; i++)
+		cout << dest[i];
+
+	cout << endl;
 }
 
 // Computes dest = x * y, digit-wise, using Karatsuba's method.
@@ -354,7 +370,17 @@ void PosInt::mulArray(int* dest, const int* x, int xlen, const int* y, int ylen)
 // dest must have size (2*len) to store the result.
 void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len)
 {
-	subArray(dest, dest, 2 * len + len % 2);
+	//cout << "Dest: " << *dest << endl;
+	cout << "Len: " << len << endl << "X: ";
+
+	for(int i = 0; i < len; i++)
+		cout << x[i];
+
+	cout << endl << "Y: ";
+	for(int i = 0; i < len; i++)
+		cout << y[i];
+
+	cout << endl;
 
 	if(len <= 1)
 	{
@@ -366,7 +392,7 @@ void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len)
 	int newLen = len / 2 + len % 2;
 	int* z0 = new int[len]();
 	int* z1 = new int[len]();
-	int* z2 = new int[len]();	
+	int* z2 = new int[len]();
 
 	int* xHigh = new int[newLen]();
 	int* xLow = new int[newLen]();
@@ -376,33 +402,100 @@ void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len)
 	//cout << x[0] << " " << y[0] << endl;
 	for(int i = 0; i < newLen; i++){
 		xHigh[i] = x[i];
-		xLow[i] = x[i + newLen];
 		yHigh[i] = y[i];
-		yLow[i] = y[i + newLen];
+
+		if(i + newLen < len){
+			xLow[i] = x[i + newLen];
+			yLow[i] = y[i + newLen];
+		}
 	}
 
-	fastMulArray(z0, xLow, yLow, newLen);
+	cout << "xHigh: ";
+	for(int i = 0; i < newLen; i++)
+		cout << xHigh[i];
+	cout << endl;
 
+	cout << "xLow: ";
+	for(int i = 0; i < newLen; i++)
+		cout << xLow[i];
+	cout << endl;
+
+	cout << "yHigh: ";
+	for(int i = 0; i < newLen; i++)
+		cout << yHigh[i];
+	cout << endl;
+
+	cout << "yLow: ";
+	for(int i = 0; i < newLen; i++)
+		cout << yLow[i];
+	cout << endl;
+
+	fastMulArray(z0, xLow, yLow, newLen);
+	
+	cout << "Z0: ";
+	
+	for(int i = 0; i < len; i++)
+		cout << z0[i];
+
+	cout << endl;
+	
 	addArray(xLow, xHigh, newLen);
 	addArray(yLow, yHigh, newLen);
 	fastMulArray(z1, xLow, yLow, newLen);
 
+	cout << "Z1: ";
+
+	for(int i = 0; i < len; i++)
+		cout << z1[i];
+
+	cout << endl;
+
 	fastMulArray(z2, xHigh, yHigh, newLen);
 
-	subArray(z1, z2, len);
+	cout << "Z2: ";
+	
+	for(int i = 0; i < len; i++)
+		cout << z2[i];
+
+	cout << endl;
+	
 	subArray(z1, z0, len);
+	subArray(z1, z2, len);
+
+	cout << "z1-z2-z0: ";
+
+	for(int i = 0; i < len; i++)
+		cout << z1[i];
+
+	cout << endl;
+	
+	/*cout << "*****************" << endl;
+	cout << "z0 " << *z0 << endl;
+	cout << "z1 " << *z1 << endl;
+	cout << "z2 " << *z2 << endl;
+	cout << "*****************" << endl;*/
 	
 	*dest = *z2;
-	addArray(&dest[newLen], z1, len);
-	addArray(&dest[len], z0, len);
+	for(int i = 0; i < len; i++)
+		dest[newLen + i] += z1[i];
+	//addArray(&dest[newLen], z1, len);
 
-	/*cout << "*****************" << endl;
-	cout << "z0 " << *z0 << " " << &z0 << endl;
-	cout << "z1 " << *z1 << " " << &z1 << endl;
-	cout << "z2 " << *z2 << " " <<  &z2 << endl;
-	cout << "dest " << dest << endl;
-	cout << "dest " << &dest << endl;
-	cout << "*****************" << endl;*/
+	cout << "Dest: ";
+	for(int i = 0; i < 2*len; i++)
+		cout << dest[i];
+
+	cout << endl;
+
+	for(int i = 0; i < len; i++)
+		dest[len + i] += z0[i];
+	//addArray(&dest[len], z0, len);
+
+	cout << "Dest: ";
+
+	for(int i = 0; i < 2*len; i++)
+		cout << dest[i];
+
+	cout << endl;
 }
 
 // this = this * x
@@ -451,8 +544,10 @@ void PosInt::fastMul(const PosInt& x) {
 
 	int* mycopy = new int[mylen];
   
-	for (int i=0; i<mylen; i++)
+	for (int i=0; i<mylen; i++){
 		mycopy[i] = digits[i];
+		digits[i] = 0;
+	}
 
 	digits.resize(mylen + xlen);
 	

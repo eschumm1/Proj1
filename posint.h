@@ -42,7 +42,7 @@ class PosInt
     // Computes dest += x, digit-wise
     static void addArray (int* dest, const int* x, int len);
     // Computes dest -= x, digit-wise
-    static void subArray (int* dest, const int* x, int len);
+    static void subArray (int* dest, const int* y, int len);
     // Computes dest = x * y, digit-wise
     static void mulArray 
       (int* dest, const int* x, int xlen, const int* y, int ylen);
