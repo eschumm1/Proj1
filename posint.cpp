@@ -305,11 +305,11 @@ void PosInt::subArray (int* dest, const int* y, int len) {
 	for(;i < len; i++)
 		x[i] = y[i];
 
-	if(compareDigits(dest, len, y, len) < 0){
+	/*if(compareDigits(dest, len, y, len) < 0){
 		int* temp = x;
 		x = dest;
 		dest = temp;
-	}
+	}*/
 	
 	for (i = 0 ; i < len; ++i)
 		dest[i] -= x[i];
@@ -374,11 +374,11 @@ void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len)
 	cout << "Len: " << len << endl << "X: ";
 
 	for(int i = 0; i < len; i++)
-		cout << x[i];
+		cout << x[i] << " ";
 
 	cout << endl << "Y: ";
 	for(int i = 0; i < len; i++)
-		cout << y[i];
+		cout << y[i] << " ";
 
 	cout << endl;
 
@@ -412,22 +412,22 @@ void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len)
 
 	cout << "xHigh: ";
 	for(int i = 0; i < newLen; i++)
-		cout << xHigh[i];
+		cout << xHigh[i] << " ";
 	cout << endl;
 
 	cout << "xLow: ";
 	for(int i = 0; i < newLen; i++)
-		cout << xLow[i];
+		cout << xLow[i] << " ";
 	cout << endl;
 
 	cout << "yHigh: ";
 	for(int i = 0; i < newLen; i++)
-		cout << yHigh[i];
+		cout << yHigh[i] << " ";
 	cout << endl;
 
 	cout << "yLow: ";
 	for(int i = 0; i < newLen; i++)
-		cout << yLow[i];
+		cout << yLow[i] << " ";
 	cout << endl;
 
 	fastMulArray(z0, xLow, yLow, newLen);
@@ -435,7 +435,7 @@ void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len)
 	cout << "Z0: ";
 	
 	for(int i = 0; i < len; i++)
-		cout << z0[i];
+		cout << z0[i] << " ";
 
 	cout << endl;
 	
@@ -446,7 +446,7 @@ void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len)
 	cout << "Z1: ";
 
 	for(int i = 0; i < len; i++)
-		cout << z1[i];
+		cout << z1[i] << " ";
 
 	cout << endl;
 
@@ -455,7 +455,7 @@ void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len)
 	cout << "Z2: ";
 	
 	for(int i = 0; i < len; i++)
-		cout << z2[i];
+		cout << z2[i] << " ";
 
 	cout << endl;
 	
@@ -465,7 +465,7 @@ void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len)
 	cout << "z1-z2-z0: ";
 
 	for(int i = 0; i < len; i++)
-		cout << z1[i];
+		cout << z1[i] << " ";
 
 	cout << endl;
 	
@@ -476,24 +476,13 @@ void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len)
 	cout << "*****************" << endl;*/
 	
 	*dest = *z2;
-	for(int i = 0; i < len; i++)
-		dest[newLen + i] += z1[i];
-	//addArray(&dest[newLen], z1, len);
-
-	cout << "Dest: ";
-	for(int i = 0; i < 2*len; i++)
-		cout << dest[i];
-
-	cout << endl;
-
-	for(int i = 0; i < len; i++)
-		dest[len + i] += z0[i];
-	//addArray(&dest[len], z0, len);
+	addArray(&dest[newLen], z1, len);
+	addArray(&dest[len], z0, len);
 
 	cout << "Dest: ";
 
 	for(int i = 0; i < 2*len; i++)
-		cout << dest[i];
+		cout << dest[i] << " ";
 
 	cout << endl;
 }
@@ -533,10 +522,10 @@ void PosInt::fastMul(const PosInt& x) {
 		fastMul(xcopy);
 		return;
 	}
-	
+
 	int mylen = digits.size();
 	int xlen = x.digits.size();
-
+  
 	if (mylen == 0 || xlen == 0) {
 		set(0);
 		return;
@@ -544,15 +533,14 @@ void PosInt::fastMul(const PosInt& x) {
 
 	int* mycopy = new int[mylen];
   
-	for (int i=0; i<mylen; i++){
+	for (int i=0; i<mylen; ++i){
 		mycopy[i] = digits[i];
 		digits[i] = 0;
 	}
-
+  
 	digits.resize(mylen + xlen);
-	
-	fastMulArray(&digits[0], mycopy, &x.digits[0], mylen);
-	
+	mulArray(&digits[0], mycopy, mylen, &x.digits[0], xlen);
+
 	normalize();
 	delete [] mycopy;
 }
