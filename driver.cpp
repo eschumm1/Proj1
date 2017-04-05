@@ -14,7 +14,7 @@ int main()
   // digits (or 12 bits) per 32-bit int.  It is more
   // space-efficient to use the default, but then the
   // numbers will print in binary.
-  	PosInt::setBase(16, 3);
+  	PosInt::setBase(10, 2);
 	
   	// x = 2^128
   	PosInt x(2);
@@ -27,7 +27,7 @@ int main()
   	srand(time(NULL));
   	PosInt z;
   	//z.set(999488);
-	//z.set(123456789);
+	//z.set(12345678);
   	z.rand(x);
   	PosInt a(z);
 

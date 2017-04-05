@@ -360,7 +360,7 @@ void PosInt::mulArray(int* dest, const int* x, int xlen, const int* y, int ylen)
 
 	cout << "Dest: ";
 	for(int i = 0; i < xlen + ylen; i++)
-		cout << dest[i];
+		cout << dest[i] << " ";
 
 	cout << endl;
 }
@@ -371,7 +371,7 @@ void PosInt::mulArray(int* dest, const int* x, int xlen, const int* y, int ylen)
 void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len)
 {
 	//cout << "Dest: " << *dest << endl;
-	cout << "Len: " << len << endl << "X: ";
+	cout << "\nLen: " << len << endl << "X: ";
 
 	for(int i = 0; i < len; i++)
 		cout << x[i] << " ";
@@ -475,7 +475,7 @@ void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len)
 	cout << "z2 " << *z2 << endl;
 	cout << "*****************" << endl;*/
 	
-	*dest = *z2;
+	addArray(dest, z2, len);
 	addArray(&dest[newLen], z1, len);
 	addArray(&dest[len], z0, len);
 
@@ -539,7 +539,7 @@ void PosInt::fastMul(const PosInt& x) {
 	}
   
 	digits.resize(mylen + xlen);
-	mulArray(&digits[0], mycopy, mylen, &x.digits[0], xlen);
+	fastMulArray(&digits[0], mycopy, &x.digits[0], xlen);
 
 	normalize();
 	delete [] mycopy;
