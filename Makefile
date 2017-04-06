@@ -1,6 +1,6 @@
 PROGS=driver
 HEADERS=posint.hpp
-CPPFLAGS=-O3 -Wall -g -Wno-sign-compare -Wno-unused-function
+CPPFLAGS=-std=c++0x -O3 -Wall -g  -Wno-sign-compare -Wno-unused-function
 #CPPFLAGS=-Wall -Wextra -Wno-sign-compare -fprofile-arcs -ftest-coverage -g
 
 # Default target

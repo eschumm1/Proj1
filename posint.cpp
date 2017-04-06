@@ -358,11 +358,11 @@ void PosInt::mulArray(int* dest, const int* x, int xlen, const int* y, int ylen)
 		}
 	}
 
-	cout << "Dest: ";
+	/*cout << "Dest: ";
 	for(int i = 0; i < xlen + ylen; i++)
 		cout << dest[i] << " ";
 
-	cout << endl;
+	cout << endl;*/
 }
 
 // Computes dest = x * y, digit-wise, using Karatsuba's method.
@@ -371,7 +371,7 @@ void PosInt::mulArray(int* dest, const int* x, int xlen, const int* y, int ylen)
 void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len)
 {
 	//cout << "Dest: " << *dest << endl;
-	cout << "\nLen: " << len << endl << "X: ";
+	/*cout << "\nLen: " << len << endl << "X: ";
 
 	for(int i = 0; i < len; i++)
 		cout << x[i] << " ";
@@ -380,7 +380,7 @@ void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len)
 	for(int i = 0; i < len; i++)
 		cout << y[i] << " ";
 
-	cout << endl;
+	cout << endl;*/
 
 	if(len <= 1)
 	{
@@ -390,14 +390,14 @@ void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len)
 	
 	// To maintain even case and handle odd case, max length divided by two and rounded up
 	int newLen = len / 2 + len % 2;
-	int* z0 = new int[len]();
-	int* z1 = new int[len]();
-	int* z2 = new int[len]();
+	int* z0 = new int[len + 1]();
+	int* z1 = new int[len + 1]();
+	int* z2 = new int[len + 1]();
 
-	int* xHigh = new int[newLen]();
-	int* xLow = new int[newLen]();
-	int* yHigh = new int[newLen]();
-	int* yLow = new int[newLen]();
+	int* xHigh = new int[newLen + 1]();
+	int* xLow = new int[newLen + 1]();
+	int* yHigh = new int[newLen + 1]();
+	int* yLow = new int[newLen + 1]();
 
 	//cout << x[0] << " " << y[0] << endl;
 	for(int i = 0; i < newLen; i++){
@@ -410,7 +410,7 @@ void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len)
 		}
 	}
 
-	cout << "xHigh: ";
+	/*cout << "xHigh: ";
 	for(int i = 0; i < newLen; i++)
 		cout << xHigh[i] << " ";
 	cout << endl;
@@ -428,46 +428,46 @@ void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len)
 	cout << "yLow: ";
 	for(int i = 0; i < newLen; i++)
 		cout << yLow[i] << " ";
-	cout << endl;
+	cout << endl;*/
 
 	fastMulArray(z0, xLow, yLow, newLen);
 	
-	cout << "Z0: ";
+	/*cout << "Z0: ";
 	
 	for(int i = 0; i < len; i++)
 		cout << z0[i] << " ";
 
-	cout << endl;
+	cout << endl;*/
 	
 	addArray(xLow, xHigh, newLen);
 	addArray(yLow, yHigh, newLen);
 	fastMulArray(z1, xLow, yLow, newLen);
 
-	cout << "Z1: ";
+	/*cout << "Z1: ";
 
 	for(int i = 0; i < len; i++)
 		cout << z1[i] << " ";
 
-	cout << endl;
+	cout << endl;*/
 
 	fastMulArray(z2, xHigh, yHigh, newLen);
 
-	cout << "Z2: ";
+	/*cout << "Z2: ";
 	
 	for(int i = 0; i < len; i++)
 		cout << z2[i] << " ";
 
-	cout << endl;
+	cout << endl;*/
 	
 	subArray(z1, z0, len);
 	subArray(z1, z2, len);
 
-	cout << "z1-z2-z0: ";
+	/*cout << "z1-z2-z0: ";
 
 	for(int i = 0; i < len; i++)
 		cout << z1[i] << " ";
 
-	cout << endl;
+	cout << endl;*/
 	
 	/*cout << "*****************" << endl;
 	cout << "z0 " << *z0 << endl;
@@ -479,12 +479,12 @@ void PosInt::fastMulArray (int* dest, const int* x, const int* y, int len)
 	addArray(&dest[newLen], z1, len);
 	addArray(&dest[len], z0, len);
 
-	cout << "Dest: ";
+	/*cout << "Dest: ";
 
 	for(int i = 0; i < 2*len; i++)
 		cout << dest[i] << " ";
 
-	cout << endl;
+	cout << endl;*/
 }
 
 // this = this * x
